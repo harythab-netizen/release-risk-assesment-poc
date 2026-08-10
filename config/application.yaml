@@ -1,0 +1,13 @@
+application:
+  name: release-risk-demo
+  version: 1.0.0
+
+server:
+  port: 8080
+
+logging:
+  level: INFO
+
+features:
+  cache-enabled: false
+  experimental-feature: false
