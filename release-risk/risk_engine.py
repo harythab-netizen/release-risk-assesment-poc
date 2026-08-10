@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 import subprocess
 from pathlib import Path
 
@@ -260,6 +261,13 @@ def main():
         json.dump(result, file, indent=2)
 
     print(f"JSON report written to: {args.output}")
+        # Export values for GitHub Actions
+    github_output = Path(os.environ.get("GITHUB_OUTPUT", ""))
+
+    if github_output:
+        with open(github_output, "a", encoding="utf-8") as file:
+            file.write(f"risk_score={result['risk_score']}\n")
+            file.write(f"risk_level={result['risk_level']}\n")
 
 
 if __name__ == "__main__":
