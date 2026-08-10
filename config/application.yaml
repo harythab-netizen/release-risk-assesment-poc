@@ -11,3 +11,6 @@ logging:
 features:
   cache-enabled: false
   experimental-feature: false
+release:
+  version: "1.0.1"
+  environment: "production"
