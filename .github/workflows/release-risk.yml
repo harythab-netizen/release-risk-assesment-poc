@@ -1,0 +1,35 @@
+name: Release Risk Assessment
+on:
+  workflow_dispatch:
+    inputs:
+      baseline:
+        description: "Baseline release tag"
+        required: true
+        default: "v1.0.0"
+        type: string
+jobs:
+  assess-risk:
+    name: Assess Release Risk
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run ReleaseGuard
+        run: |
+          python release-risk/risk_engine.py \
+            --base "${{ inputs.baseline }}" \
+            --target "HEAD" \
+            --branch "${{ github.ref_name }}"
