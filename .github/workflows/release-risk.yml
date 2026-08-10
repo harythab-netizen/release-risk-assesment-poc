@@ -1,4 +1,5 @@
 name: Release Risk Assessment
+# Demo change to simulate CI/CD workflow modification
 on:
   workflow_dispatch:
     inputs:
