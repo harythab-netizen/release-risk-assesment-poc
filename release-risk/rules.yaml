@@ -1,0 +1,57 @@
+version: "1.0"
+
+risk_levels:
+  low:
+    min: 0
+    max: 24
+
+  medium:
+    min: 25
+    max: 49
+
+  high:
+    min: 50
+    max: 74
+
+  critical:
+    min: 75
+    max: 100
+
+
+rules:
+
+  hotfix_branch:
+    score: 20
+    description: "Release is created from a hotfix branch"
+
+  medium_change_set:
+    score: 8
+    description: "Between 10 and 20 files changed"
+
+  large_change_set:
+    score: 15
+    description: "More than 20 files changed"
+
+  medium_commit_volume:
+    score: 5
+    description: "More than 10 commits included in the release"
+
+  large_commit_volume:
+    score: 10
+    description: "More than 20 commits included in the release"
+
+  dependency_change:
+    score: 15
+    description: "Application dependency files changed"
+
+  configuration_change:
+    score: 10
+    description: "Application configuration changed"
+
+  workflow_change:
+    score: 20
+    description: "CI/CD workflow files changed"
+
+  source_code_change:
+    score: 5
+    description: "Application source code changed"
