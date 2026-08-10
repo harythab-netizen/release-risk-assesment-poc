@@ -81,6 +81,17 @@ def assess_release(base, target, branch):
     rules = config["rules"]
 
     changed_files = get_changed_files(base, target)
+        # Ignore ReleaseGuard's own files from the assessment
+    excluded_paths = (
+        "release-risk/",
+        ".github/workflows/release-risk.yml",
+    )
+
+    changed_files = [
+        file
+        for file in changed_files
+        if not file.startswith(excluded_paths)
+    ]
     commit_count = get_commit_count(base, target)
 
     factors = []
