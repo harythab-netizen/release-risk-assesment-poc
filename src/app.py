@@ -18,7 +18,7 @@ def version():
     return jsonify(
         {
             "version": "1.0.1",
-            "release": "minor-update"
+            "release": "critical-hotfix"
         }
     )
 if __name__ == "__main__":
