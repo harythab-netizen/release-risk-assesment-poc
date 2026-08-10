@@ -26,10 +26,39 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-
       - name: Run ReleaseGuard
+        id: releaseguard
         run: |
           python release-risk/risk_engine.py \
             --base "${{ inputs.baseline }}" \
             --target "HEAD" \
             --branch "${{ github.ref_name }}"
+      - name: Create Release Risk Summary 
+        run: |
+            echo "# 🛡️ ReleaseGuard" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "## Release Risk Assessment" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Property | Value |" >> "$GITHUB_STEP_SUMMARY"
+            echo "|---|---|" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Baseline | \`${{ inputs.baseline }}\` |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Target | \`HEAD\` |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Branch | \`${{ github.ref_name }}\` |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Risk Score | **${{ steps.releaseguard.outputs.risk_score }}/100** |" >> "$GITHUB_STEP_SUMMARY"
+            echo "| Risk Level | **${{ steps.releaseguard.outputs.risk_level }}** |" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "## Recommendation" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+
+            LEVEL="${{ steps.releaseguard.outputs.risk_level }}"
+
+            if [ "$LEVEL" = "LOW" ]; then
+              echo "✅ Low release risk. Normal review is sufficient." >> "$GITHUB_STEP_SUMMARY"
+            elif [ "$LEVEL" = "MEDIUM" ]; then
+              echo "🟡 Medium release risk. Review the identified changes before release." >> "$GITHUB_STEP_SUMMARY"
+            elif [ "$LEVEL" = "HIGH" ]; then
+              echo "🟠 High release risk. Additional review is recommended before release." >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "🔴 Critical release risk. Detailed review is recommended before release." >> "$GITHUB_STEP_SUMMARY"
+            fi
+    
