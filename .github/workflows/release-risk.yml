@@ -62,4 +62,15 @@ jobs:
             else
               echo "🔴 Critical release risk. Detailed review is recommended before release." >> "$GITHUB_STEP_SUMMARY"
             fi
-    
+      - name: Enforce Release Risk Gate
+        run: |
+          LEVEL="${{ steps.releaseguard.outputs.risk_level }}"
+
+          if [ "$LEVEL" = "CRITICAL" ]; then
+            echo "Critical release risk detected. Blocking release."
+            exit 1
+          elif [ "$LEVEL" = "HIGH" ]; then
+            echo "::warning::High release risk detected. Additional review is required before release."
+          else
+            echo "Release risk level is $LEVEL. Gate passed."
+          fi
