@@ -21,5 +21,13 @@ def version():
             "release": "minor-update"
         }
     )
+
+@app.route("/info")
+def info():
+    return jsonify({
+        "service": "release-risk-demo",
+        "message": "Demo release"
+    })
+    
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
